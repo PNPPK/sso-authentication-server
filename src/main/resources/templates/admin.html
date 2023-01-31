@@ -145,10 +145,11 @@
         </div>
     </div>
     <div class="d-grid">
-        <a href="/" class="btn btn-secondary" type="button">Back to main page</a>
+        <a th:href="@{/}" class="btn btn-secondary" type="button">Back to main page</a>
     </div>
-    <script type="text/javascript">
-    const instance = axios.create();
+    <script type="text/javascript" th:inline="javascript">
+    const contextPath = /*[[@{/}]]*/ "/";
+    const instance = axios.create({ baseURL: contextPath });
     function getUserInfo() {
         document.getElementById('userInfo').value = '';
         let username = document.getElementById('usernameInput1').value;

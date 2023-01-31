@@ -86,13 +86,14 @@
         </div>
     </div>
     <div sec:authorize="hasRole('ADMIN')" class="d-grid mb-3">
-        <a href="/admin" class="btn btn-warning" type="button">Admin panel</a>
+        <a th:href="@{/admin}" class="btn btn-warning" type="button">Admin panel</a>
     </div>
     <form action="#" method="post" th:action="@{/do_logout}" class="mb-3">
         <input class="btn btn-outline-danger form-control" type="submit" value="Logout"/>
     </form>
-    <script type="text/javascript">
-    const instance = axios.create();
+    <script type="text/javascript" th:inline="javascript">
+    const contextPath = /*[[@{/}]]*/ "/";
+    const instance = axios.create({ baseURL: contextPath });
     const username = document.getElementById('login').innerHTML;
     function changePass() {
         document.getElementById('errorPassword').value = '';
