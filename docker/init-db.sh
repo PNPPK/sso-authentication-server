@@ -61,6 +61,10 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
                     "machines": [1,2,3,4,5,6,7,8,9,10,16,17],
                     "roleName": "administrator"
                 },
+                "system5s": {
+                    "structures": [ "ZPM" ],
+                    "roles": [ "ROLE_KOMISSAR" ]
+                },
                 "passport": {
                     "roles": [
                         "ROLE_ADMIN"
@@ -122,6 +126,10 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
                     "areas": [1,4,5],
                     "roles": ["ROLE_TRACK"],
                     "privileges": ["ORDER_DATE","PLAN_AREA"]
+                },
+                "system5s": {
+                    "structures": [ "ZPM" ],
+                    "roles": [ "ROLE_CHAIRMAN" ]
                 },
                 "passport": {
                     "credentials_exp": 1672513199001
