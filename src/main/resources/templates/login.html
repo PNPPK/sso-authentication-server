@@ -68,7 +68,7 @@
                             <div class="control">
                                 <button class="button is-link" type="submit">Вход</button>
                             </div>
-                            <p class="help" th:if="${param.credentialsError}" th:text="${session?.SPRING_SECURITY_LAST_EXCEPTION?.message}">Неверное имя пользователя или пароль</p>
+                            <p class="help" th:if="${param.credentialsError}" th:text="${param.credentialsError}">Credentials error</p>
                             <p class="help" th:if="${param.successLogout}">Вы вышли из системы</p>
                         </div>
                         <input id="fp_input" name="_fingerprint" type="hidden" value="FP_PLACEHOLDER">
