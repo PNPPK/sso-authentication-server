@@ -5,10 +5,8 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1.0" name="viewport">
     <script th:src="@{/webjars/lodash/4.17.21/lodash.js}"></script>
-    <script th:src="@{/webjars/bootstrap/5.2.1/dist/js/bootstrap.min.js}"></script>
     <script th:src="@{/js/fingerprint2.min.js}"></script>
     <script th:src="@{/js/script.js}"></script>
-    <link th:href="@{/webjars/bootstrap/5.2.1/dist/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/webjars/font-awesome/5.15.3/css/all.css}" rel="stylesheet">
     <link th:href="@{/webjars/bulma/0.9.2/css/bulma.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
@@ -20,30 +18,67 @@
     <strong>We're sorry but this app doesn't work properly without JavaScript enabled. Please enable it to
         continue.</strong>
 </noscript>
-<div class="position-absolute top-0 start-50 translate-middle-x" style="width: 360px;">
-    <form class="container mt-3" action="#" id="login_form" method="post" th:action="@{/do_login}">
-        <div class="mb-3">
-            <label for="username" class="form-label" th:text="#{login.username}">Username</label>
-            <input type="text" name="username" class="form-control" id="username">
+<div>
+    <nav class="navbar is-primary sticky-navbar">
+        <div class="navbar-brand">
+            <span class="logo"><a th:href="@{/}" id="logo"><img th:src="@{/images/logo.png}"></a></span>
+            <div class="simple-clock" id="time-block">
+                <p id="time"></p>
+            </div>
+            <div class="navbar-burger" data-target="navMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label" th:text="#{login.password}">Password</label>
-            <input type="password" name="password" class="form-control" id="password">
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-end">
+                <span class="navbar-item" onclick="changeTouchStatus()" style="margin: 0 16px">
+                    <i class="has-text-warning is-size-2 fas fa-keyboard" id="touch-keyboard"
+                       style="display: none;"></i>
+                    <i class="has-text-danger is-size-2 fas fa-keyboard" id="not-touch-keyboard"></i>
+                </span>
+            </div>
         </div>
-        <div class="input-group mb-3">
-            <button class="btn btn-outline-primary" type="submit" th:text="#{login.signIn}">Sign in</button>
-            <input th:if="${param.credentialsError}"
-                   th:value="${param.credentialsError}"
-                   class="form-control" disabled>
-            <input th:if="${param.successLogout}"
-                   value="You are logged out"
-                   th:value="#{login.logout}"
-                   class="form-control" disabled>
+    </nav>
+    <div class="box">
+        <div class="columns is-centered">
+            <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
+                <div class="box">
+                    <form action="#" id="login_form" method="post" th:action="@{/do_login}">
+                        <div class="field">
+                            <label class="label">Имя пользователя</label>
+                            <div class="control has-icons-left">
+                                <input class="input" name="username" placeholder="Имя пользователя" type="text">
+                                <span class="icon is-small is-left">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Пароль</label>
+                            <div class="control has-icons-left">
+                                <input class="input" name="password" placeholder="Пароль" type="password">
+                                <span class="icon is-small is-left">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link" type="submit">Вход</button>
+                            </div>
+                            <p class="help" th:if="${param.credentialsError}" th:text="${session?.SPRING_SECURITY_LAST_EXCEPTION?.message}">Неверное имя пользователя или пароль</p>
+                            <p class="help" th:if="${param.successLogout}">Вы вышли из системы</p>
+                        </div>
+                        <input id="fp_input" name="_fingerprint" type="hidden" value="FP_PLACEHOLDER">
+                        <input th:if="${param.continue != null}" name="_continue" type="hidden" th:value="${param.continue}">
+                        <input th:if="${param.app != null}" name="_app" type="hidden" th:value="${param.app}">
+                    </form>
+                </div>
+            </div>
         </div>
-        <input id="fp_input" name="_fingerprint" type="hidden" value="FP_PLACEHOLDER">
-        <input th:if="${param.continue != null}" name="_continue" type="hidden" th:value="${param.continue}">
-        <input th:if="${param.app != null}" name="_app" type="hidden" th:value="${param.app}">
-    </form>
+    </div>
 </div>
 <script type="text/javascript">
      document.getElementById('login_form').onsubmit = function(e) {
@@ -55,5 +90,6 @@
             });
     }
 </script>
+<script th:src="@{/js/postscript.js}"></script>
 </body>
 </html>
