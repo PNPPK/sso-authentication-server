@@ -33,6 +33,16 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
         hash text NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS webhooks
+    (
+        id text NOT NULL,
+        event text NOT NULL,
+        secret text NOT NULL,
+        url text NOT NULL,
+        enabled boolean NOT NULL,
+        CONSTRAINT webhooks_pkey PRIMARY KEY (id)
+    );
+
     INSERT INTO users (login, config)
         VALUES
             ('admin', '{
