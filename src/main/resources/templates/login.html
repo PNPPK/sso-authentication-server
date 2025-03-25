@@ -44,6 +44,12 @@
     <div class="box">
         <div class="columns is-centered">
             <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
+                <div th:if="${param.credentialsError}" class="notification is-danger">
+                    <span th:text="${param.credentialsError}">Credentials error</span>
+                </div>
+                <div th:if="${param.successLogout}" class="notification is-primary">
+                    Вы вышли из системы
+                </div>
                 <div class="box">
                     <form action="#" id="login_form" method="post" th:action="@{/do_login}">
                         <div class="field">
@@ -51,8 +57,8 @@
                             <div class="control has-icons-left">
                                 <input class="input" name="username" placeholder="Имя пользователя" type="text">
                                 <span class="icon is-small is-left">
-                                <i class="fas fa-user"></i>
-                            </span>
+                                    <i class="fas fa-user"></i>
+                                </span>
                             </div>
                         </div>
                         <div class="field">
@@ -60,20 +66,24 @@
                             <div class="control has-icons-left">
                                 <input class="input" name="password" placeholder="Пароль" type="password">
                                 <span class="icon is-small is-left">
-                                <i class="fas fa-lock"></i>
-                            </span>
+                                    <i class="fas fa-lock"></i>
+                                </span>
                             </div>
                         </div>
-                        <div class="field is-grouped">
-                            <div class="control">
-                                <button class="button is-link" type="submit">Вход</button>
-                            </div>
-                            <p class="help" th:if="${param.credentialsError}" th:text="${param.credentialsError}">Credentials error</p>
-                            <p class="help" th:if="${param.successLogout}">Вы вышли из системы</p>
+                        <div class="field">
+                            <button class="button is-primary is-fullwidth" type="button" onclick="ssoLogin()">
+                                Войти
+                            </button>
+                        </div>
+                        <div class="field">
+                            <button class="button is-light is-fullwidth" type="button" onclick="ldapLogin()">
+                                Войти через корпоративный доступ
+                            </button>
                         </div>
                         <input id="fp_input" name="_fingerprint" type="hidden" value="FP_PLACEHOLDER">
                         <input th:if="${param.continue != null}" name="_continue" type="hidden" th:value="${param.continue}">
                         <input th:if="${param.app != null}" name="_app" type="hidden" th:value="${param.app}">
+                        <input id="authentication_mode" name="_authenticationMode" type="hidden" th:value="sso">
                     </form>
                 </div>
             </div>
@@ -81,13 +91,24 @@
     </div>
 </div>
 <script type="text/javascript">
-     document.getElementById('login_form').onsubmit = function(e) {
-        e.preventDefault();
-        getFingerprint()
-            .then(result => {
-                document.getElementById('fp_input').value = result;
-                document.getElementById('login_form').submit();
-            });
+    function ssoLogin() {
+       document.getElementById('authentication_mode').value = 'sso';
+       submitLogin();
+    }
+    function ldapLogin() {
+       document.getElementById('authentication_mode').value = 'ldap';
+       submitLogin();
+    }
+    document.getElementById('login_form').onsubmit = submitLogin;
+    function submitLogin(event) {
+       if (event) {
+           e.preventDefault();
+       }
+       getFingerprint()
+           .then(result => {
+               document.getElementById('fp_input').value = result;
+               document.getElementById('login_form').submit();
+           });
     }
 </script>
 <script th:src="@{/js/postscript.js}"></script>
