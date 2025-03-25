@@ -1,5 +1,8 @@
 package ru.loolzaaa.authserver.config.security.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,9 +17,9 @@ import ru.loolzaaa.authserver.services.CookieService;
 import ru.loolzaaa.authserver.services.JWTService;
 import ru.loolzaaa.authserver.services.SecurityContextService;
 
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -189,9 +192,12 @@ class JwtTokenFilterTest {
         final String VALID_REFRESH_TOKEN = "VALID_REFRESH_TOKEN";
         final String CONTEXT_PATH = "/context-path";
         final String BROWSER_HEADER = "text/html; charset=utf-8";
+        final String encodedPath = URLEncoder.encode(Base64.getUrlEncoder()
+                .encodeToString("http://null:0/context-path/some-uri".getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
         ArgumentCaptor<String> redirectUrlCaptor = ArgumentCaptor.forClass(String.class);
         when(cookieService.getCookieValueByName(eq(CookieName.ACCESS.getName()), any())).thenReturn(INVALID_ACCESS_TOKEN);
         when(cookieService.getCookieValueByName(eq(CookieName.REFRESH.getName()), any())).thenReturn(VALID_REFRESH_TOKEN);
+        when(req.getScheme()).thenReturn("http");
         when(req.getParameter("_fingerprint")).thenReturn(null);
         when(req.getParameter("continue")).thenReturn(null);
         when(req.getContextPath()).thenReturn(CONTEXT_PATH);
@@ -202,7 +208,8 @@ class JwtTokenFilterTest {
         jwtTokenFilter.doFilterInternal(req, resp, filterChain);
 
         verify(resp).sendRedirect(redirectUrlCaptor.capture());
-        assertThat(redirectUrlCaptor.getValue()).isEqualTo(CONTEXT_PATH + ssoServerProperties.getRefreshUri());
+        assertThat(redirectUrlCaptor.getValue())
+                .isEqualTo(CONTEXT_PATH + ssoServerProperties.getRefreshUri() + "?continue=" + encodedPath);
         verifyNoInteractions(filterChain);
     }
 
