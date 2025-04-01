@@ -102,10 +102,10 @@
     }
     document.getElementById('login_form').onsubmit = submitLogin;
     function submitLogin(event) {
-       if (event) {
-           e.preventDefault();
-       }
-       getFingerprint()
+        if (event) {
+            event.preventDefault();
+        }
+        getFingerprint()
            .then(result => {
                document.getElementById('fp_input').value = result;
                document.getElementById('login_form').submit();
